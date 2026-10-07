@@ -1,9 +1,6 @@
 import numpy as np
 from helpers.helpers import *
 
-""""TODO: Important to note that any features removed from X will have to be kept in memory and subsequently removed from the y_predictions and test sets as well.
-
-Have to look into to submission format when removing features"""
 
 def audit_missing_values(X, feature_names):
     """Compute NaN counts and percentages across all features and observations."""
