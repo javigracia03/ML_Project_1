@@ -1,2 +1,6 @@
 # Ignored because of too large files
 data/
+src/helpers/__pycache__/
+src/preprocessing/__pycache__/
+.venv/
+src/.ipynb_checkpoints/
