@@ -70,3 +70,26 @@ def create_csv_submission(ids, y_pred, name):
         writer.writeheader()
         for r1, r2 in zip(ids, y_pred):
             writer.writerow({"Id": int(r1), "Prediction": int(r2)})
+
+def load_and_cache(data_dir="./data/"):
+    """ if the data is not cached, load it and cache it. Otherwise, load the cached data. """
+    print("loading data took me approximately 1min30s, but loading from cache takes 2 seconds, be patient")
+
+    with open("./../data/x_train.csv", "r", encoding="utf-8") as f:
+        header = f.readline().strip().split(",")
+    feature_names = np.array(header[1:])
+
+    if os.path.exists(os.path.join(data_dir, "cached_data.npz")):
+        print("loading cached data ...")
+        cached_data = np.load(os.path.join(data_dir, "cached_data.npz"))
+        x_train = cached_data["x_train"]
+        x_test = cached_data["x_test"]
+        y_train = cached_data["y_train"]
+        train_ids = cached_data["train_ids"]
+        test_ids = cached_data["test_ids"]
+    else:
+        print("loading data from csv (slow) ...")
+        x_train, x_test, y_train, train_ids, test_ids = load_csv_data(data_dir)
+        np.savez(os.path.join(data_dir, "cached_data.npz"), x_train=x_train, x_test=x_test, y_train=y_train, train_ids=train_ids, test_ids=test_ids)
+
+    return feature_names, x_train, x_test, y_train, train_ids, test_ids
