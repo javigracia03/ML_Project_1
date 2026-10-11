@@ -1,5 +1,7 @@
 import numpy as np
 
+#TODO: add docstrings and documentation for each function
+
 def mean_squared_error_gd(y, tx, initial_w, max_iters, gamma):
     w = initial_w
     N = tx.shape[0]
@@ -55,4 +57,34 @@ def ridge_regression(y, tx, lambda_):
     mse = (1/2) * np.mean(e**2)
 
     return w, mse
+
+def logistic_regression(y, tx, initial_w, max_iters, gamma):
+    w = initial_w
+    N = tx.shape[0]
+
+    for i in range(max_iters):
+        gradient = (1 / N) * tx.T @ (_sigmoid(tx @ w) - y)
+        w = w - gamma*gradient
+
+    pred = tx @ w
+    logistic_loss = -np.mean(y * np.log(_sigmoid(pred)) + (1 - y) * np.log(1 - _sigmoid(pred)))
+
+    return w, logistic_loss
+
+def reg_logistic_regression(y, tx, lambda_, initial_w, max_iters, gamma):
+    w = initial_w
+    N = tx.shape[0]
+
+    for i in range(max_iters):
+        gradient = (1 / N) * tx.T @ (_sigmoid(tx @ w) - y)
+        gradient += 2*lambda_ * w
+        w = w - gamma*gradient
+
+    pred = tx @ w
+    logistic_loss = -np.mean(y * np.log(_sigmoid(pred)) + (1 - y) * np.log(1 - _sigmoid(pred)))
+    logistic_loss += lambda_ * np.sum(w ** 2)
+    return w, logistic_loss 
+
+def _sigmoid(t):
+    return 1 / (1 + np.exp(-t))
 
